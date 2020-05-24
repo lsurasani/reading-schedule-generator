@@ -24,11 +24,14 @@ import { UsersModule } from './users/users.module';
       }),
       inject: [ConfigService],
     }),
-    GraphQLModule.forRoot({ autoSchemaFile: 'schema.gql' }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+      context: ({ req }) => ({ req }),
+    }),
     AuthModule,
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthModule],
+  providers: [AppService],
 })
 export class AppModule {}

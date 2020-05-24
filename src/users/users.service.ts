@@ -14,8 +14,11 @@ export class UsersService {
 
   async create(userInput: CreateUserInput) {
     const newUser = new this.userModel(userInput);
+    const userToSave = await this.findDuplicate(newUser);
 
-    return await newUser.save();
+    if (userToSave) {
+      return await newUser.save();
+    }
   }
 
   async getUserById(id: string) {
@@ -24,8 +27,11 @@ export class UsersService {
   }
 
   async getUser(username: string) {
-    const user = await this.userModel.findOne({ username: username });
-    return user;
+    return await this.userModel.findOne({ username: username });
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.userModel.findOne({ email: email });
   }
 
   private async findUser(id: string) {
@@ -35,6 +41,21 @@ export class UsersService {
     } catch (error) {}
     if (!user) {
       throw new NotFoundException("Couldn't find that user!");
+    }
+
+    return user;
+  }
+
+  private async findDuplicate(user: User) {
+    let foundUser = await this.getUser(user.username);
+
+    if (foundUser) {
+      throw Error('Username already taken');
+    } else {
+      foundUser = await this.getUserByEmail(user.email);
+      if (foundUser) {
+        throw Error('Email already taken');
+      }
     }
 
     return user;
