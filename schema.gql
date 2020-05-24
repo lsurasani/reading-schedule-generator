@@ -1,0 +1,61 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Book {
+  id: ID!
+  title: String!
+  author: String!
+  pages: Int!
+  dueDate: Date
+  startDate: Date
+  isbn: String
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type User {
+  id: ID!
+  username: String!
+  password: String!
+  email: String!
+}
+
+type Query {
+  getBook(id: String!): Book!
+  books: [Book!]!
+  getUser(id: String!): User!
+}
+
+type Mutation {
+  createBook(inputData: CreateBookInput!): Book!
+  updateBook(inputData: UpdateBookInput!): Book!
+  removeBook(id: String!): Book!
+  createUser(inputData: CreateUserInput!): User!
+}
+
+input CreateBookInput {
+  title: String!
+  author: String!
+  pages: Int!
+  dueDate: Date
+  startDate: Date
+  isbn: String
+}
+
+input UpdateBookInput {
+  id: ID!
+  title: String
+  author: String
+  pages: Int
+  dueDate: Date
+  startDate: Date
+  isbn: String
+}
+
+input CreateUserInput {
+  username: String!
+  password: String!
+  email: String!
+}
