@@ -51,8 +51,6 @@ export class BooksService {
       title: book.title,
       author: book.author,
       pages: book.pages,
-      startDate: book.startDate,
-      dueDate: book.dueDate,
     };
   }
 

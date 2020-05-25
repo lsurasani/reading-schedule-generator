@@ -7,19 +7,15 @@ type Book {
   title: String!
   author: String!
   pages: Int!
-  dueDate: Date
-  startDate: Date
   isbn: String
 }
-
-"""Date custom scalar type"""
-scalar Date
 
 type User {
   id: ID!
   username: String!
   password: String!
   email: String!
+  accessToken: String
 }
 
 type Query {
@@ -42,8 +38,6 @@ input CreateBookInput {
   title: String!
   author: String!
   pages: Int!
-  dueDate: Date
-  startDate: Date
   isbn: String
 }
 
@@ -52,8 +46,6 @@ input UpdateBookInput {
   title: String
   author: String
   pages: Int
-  dueDate: Date
-  startDate: Date
   isbn: String
 }
 

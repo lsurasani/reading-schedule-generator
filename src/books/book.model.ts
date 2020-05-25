@@ -15,11 +15,5 @@ export class Book {
   pages: number;
 
   @Field({ nullable: true })
-  dueDate: Date;
-
-  @Field({ nullable: true })
-  startDate: Date;
-
-  @Field({ nullable: true })
   isbn: string;
 }

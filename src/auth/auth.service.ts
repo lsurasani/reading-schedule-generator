@@ -19,7 +19,7 @@ export class AuthService {
         sub: user._id,
         username: user.username,
       });
-      console.log(accessToken);
+      user.accessToken = accessToken;
       return user;
     }
 
@@ -39,7 +39,7 @@ export class AuthService {
         sub: user._id,
         username: user.username,
       });
-      console.log(accessToken);
+      user.accessToken = accessToken;
     }
 
     return user;

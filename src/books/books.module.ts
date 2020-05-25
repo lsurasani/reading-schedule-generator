@@ -9,6 +9,6 @@ import { DateScalar } from '../scalars/date.scalar';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'Book', schema: BookSchema }])],
-  providers: [BooksService, BooksResolver, DateScalar],
+  providers: [BooksService, BooksResolver],
 })
 export class BooksModule {}
