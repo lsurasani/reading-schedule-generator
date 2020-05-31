@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { UserBooksModule } from './user_books/user_books.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    UserBooksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

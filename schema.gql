@@ -18,11 +18,35 @@ type User {
   accessToken: String
 }
 
+type UserBook {
+  id: ID!
+  user: User!
+  book: Book!
+  startDate: DateTime
+  endDate: DateTime
+  status: AllowedBookStatuses
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum AllowedBookStatuses {
+  TO_READ
+  IN_PROGRESS
+  DONE
+}
+
 type Query {
   getBook(id: String!): Book!
   books: [Book!]!
   whoAmI: User!
   getUser(id: String!): User!
+  getUserBook(bookId: String!): UserBook!
+  getCurrentUserBooks: [UserBook!]!
+  getUpcomingUserBooks: [UserBook!]!
+  getUnscheduledUserBooks: [UserBook!]!
 }
 
 type Mutation {
@@ -32,6 +56,8 @@ type Mutation {
   loginUser(loginInput: LoginInput!): User!
   signUpUser(signUpInput: CreateUserInput!): User!
   createUser(inputData: CreateUserInput!): User!
+  createUserBook(input: CreateUserBookInput!): UserBook!
+  createUserBookFromBook(input: CreateUserBookFromBookInput!): UserBook!
 }
 
 input CreateBookInput {
@@ -58,4 +84,20 @@ input CreateUserInput {
   username: String!
   password: String!
   email: String!
+}
+
+input CreateUserBookInput {
+  bookId: String!
+  startDate: DateTime
+  endDate: DateTime
+  status: AllowedBookStatuses
+}
+
+input CreateUserBookFromBookInput {
+  title: String!
+  author: String!
+  pages: Int!
+  isbn: String
+  startDate: DateTime
+  endDate: DateTime
 }

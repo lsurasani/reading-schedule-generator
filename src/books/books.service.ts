@@ -54,7 +54,7 @@ export class BooksService {
     };
   }
 
-  private async findBook(id: string): Promise<Book> {
+  async findBook(id: string): Promise<Book> {
     let book: Book;
     try {
       book = await this.bookModel.findById(id);
