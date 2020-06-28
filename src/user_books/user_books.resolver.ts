@@ -8,6 +8,7 @@ import { UserBooksService } from './user_books.service';
 import { CreateUserBookInput } from './inputs/create-user_book.input';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { CreateUserBookFromBookInput } from './inputs/create-user_book_from_book.input';
+import { UpdateUserBookInput } from './inputs/update-user_book.input';
 
 @UseGuards(GqlAuthGuard)
 @Resolver(() => UserBook)
@@ -52,6 +53,15 @@ export class UserBooksResolver {
     @Args('input') input: CreateUserBookFromBookInput,
   ) {
     const result = this.userBooksService.createFromBook(input, user);
+    return result;
+  }
+
+  @Mutation(() => UserBook)
+  async updateUserBook(
+    @CurrentUser() user: User,
+    @Args('input') input: UpdateUserBookInput,
+  ) {
+    const result = this.userBooksService.updateUserBook(input);
     return result;
   }
 }

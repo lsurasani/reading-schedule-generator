@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { UserBook } from './user_book.model';
 import { User } from '../users/user.model';
 import { CreateUserBookInput } from './inputs/create-user_book.input';
+import { UpdateUserBookInput } from './inputs/update-user_book.input';
 import { CreateUserBookFromBookInput } from './inputs/create-user_book_from_book.input';
 import { BooksService } from 'src/books/books.service';
 import { UsersService } from 'src/users/users.service';
@@ -35,6 +36,17 @@ export class UserBooksService {
       book,
       user,
     );
+  }
+
+  async updateUserBook(input: UpdateUserBookInput) {
+    const userBook = await this.findUserBookById(input.id);
+    console.log(userBook);
+    this.validateInputDates(input.startDate, input.endDate);
+    if (userBook) {
+      userBook.startDate = input.startDate;
+      userBook.endDate = input.endDate;
+      return await userBook.save();
+    }
   }
 
   async create(input: CreateUserBookInput, book: Book, user: User) {
@@ -74,6 +86,10 @@ export class UserBooksService {
 
   private async findUserBook(book: Book, user: User) {
     return await this.userBookModel.findOne({ book, user });
+  }
+
+  private async findUserBookById(id: string) {
+    return await this.userBookModel.findOne({ _id: id });
   }
 
   private async findAllUpcomingUserBooks(user: User) {

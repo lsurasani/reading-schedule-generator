@@ -32,7 +32,7 @@ export class BooksService {
       book[k] = updates[k];
     });
     const savedBook = await this.bookModel(book).save();
-    return this.prettyBook(savedBook);
+    return savedBook;
   }
 
   async remove(id: string) {

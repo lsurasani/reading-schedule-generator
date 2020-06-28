@@ -58,6 +58,7 @@ type Mutation {
   createUser(inputData: CreateUserInput!): User!
   createUserBook(input: CreateUserBookInput!): UserBook!
   createUserBookFromBook(input: CreateUserBookFromBookInput!): UserBook!
+  updateUserBook(input: UpdateUserBookInput!): UserBook!
 }
 
 input CreateBookInput {
@@ -100,4 +101,11 @@ input CreateUserBookFromBookInput {
   isbn: String
   startDate: DateTime
   endDate: DateTime
+}
+
+input UpdateUserBookInput {
+  id: ID!
+  startDate: DateTime
+  endDate: DateTime
+  status: AllowedBookStatuses
 }
