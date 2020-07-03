@@ -9,6 +9,7 @@ import { CreateUserBookFromBookInput } from './inputs/create-user_book_from_book
 import { BooksService } from 'src/books/books.service';
 import { UsersService } from 'src/users/users.service';
 import { Book } from 'src/books/book.model';
+import { CreateUserBookFromIsbnInput } from './inputs/create-user_book_from_isbn.input';
 
 @Injectable()
 export class UserBooksService {
@@ -22,7 +23,6 @@ export class UserBooksService {
 
   async createFromBook(input: CreateUserBookFromBookInput, user: User) {
     const book = await this.booksService.create(input);
-    console.log(book);
     if (!book) {
       throw new Error("Book couldn't be created");
     }
@@ -38,9 +38,27 @@ export class UserBooksService {
     );
   }
 
+  async createFromIsbn(input: CreateUserBookFromIsbnInput, user: User) {
+    const book = await this.booksService.findOrCreateBookByIsbn(input.isbn);
+    if (!book) {
+      throw new Error("Book couldn't be created");
+    }
+    const data: CreateUserBookInput = {
+      bookId: book.id,
+      status: null,
+      startDate: null,
+      endDate: null,
+    };
+    if (input.startDate && input.endDate) {
+      this.validateInputDates(input.startDate, input.endDate);
+      data.startDate = input.startDate;
+      data.endDate = input.endDate;
+    }
+    return await this.create(data, book, user);
+  }
+
   async updateUserBook(input: UpdateUserBookInput) {
     const userBook = await this.findUserBookById(input.id);
-    console.log(userBook);
     this.validateInputDates(input.startDate, input.endDate);
     if (userBook) {
       userBook.startDate = input.startDate;

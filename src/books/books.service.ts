@@ -1,15 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpService } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Book } from './book.model';
 import { CreateBookInput } from './inputs/create-book.input';
 import { UpdateBookInput } from './inputs/update-book.input';
 
+interface AuthorLayout {
+  url: string;
+  name: string;
+}
+
 @Injectable()
 export class BooksService {
   private books: Book[] = [];
 
-  constructor(@InjectModel('Book') private readonly bookModel: Model<Book>) {}
+  constructor(
+    @InjectModel('Book') private readonly bookModel: Model<Book>,
+    private http: HttpService,
+  ) {}
 
   async create(bookInput: CreateBookInput): Promise<Book> {
     const newBook = new this.bookModel(bookInput);
@@ -51,6 +59,7 @@ export class BooksService {
       title: book.title,
       author: book.author,
       pages: book.pages,
+      isbn: book.isbn,
     };
   }
 
@@ -63,5 +72,40 @@ export class BooksService {
       throw new NotFoundException('Could not find book.');
     }
     return book;
+  }
+
+  async findOrCreateBookByIsbn(isbn: string) {
+    let book: Book;
+    book = await this.bookModel.findOne({ isbn });
+    if (!book) {
+      book = await this.createBookIsbn(isbn);
+    }
+    return book;
+  }
+
+  private async createBookIsbn(isbn: string) {
+    const response = await this.apiBook(isbn);
+    const bookData = response.data[`ISBN:${isbn}`];
+    if (!bookData) {
+      throw new Error("That book couldn't be found.");
+    }
+    const authors = bookData.authors
+      .map((author: AuthorLayout) => author.name)
+      .join(', ');
+    const createBookData: CreateBookInput = {
+      title: bookData.title,
+      author: authors,
+      pages: bookData.number_of_pages ? bookData.number_of_pages : 0,
+      isbn: isbn,
+    };
+    return this.create(createBookData);
+  }
+
+  private async apiBook(isbn: string) {
+    return this.http
+      .get(
+        `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`,
+      )
+      .toPromise();
   }
 }

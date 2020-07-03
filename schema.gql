@@ -58,6 +58,7 @@ type Mutation {
   createUser(inputData: CreateUserInput!): User!
   createUserBook(input: CreateUserBookInput!): UserBook!
   createUserBookFromBook(input: CreateUserBookFromBookInput!): UserBook!
+  createUserBookFromIsbn(input: CreateUserBookFromIsbnInput!): UserBook!
   updateUserBook(input: UpdateUserBookInput!): UserBook!
 }
 
@@ -99,6 +100,12 @@ input CreateUserBookFromBookInput {
   author: String!
   pages: Int!
   isbn: String
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input CreateUserBookFromIsbnInput {
+  isbn: String!
   startDate: DateTime
   endDate: DateTime
 }
